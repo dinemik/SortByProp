@@ -25,14 +25,11 @@ namespace SortbyProp
         {
             InitializeComponent();
             List<string> forCb = new List<string>();
+
             forCb.Add("");
             foreach (var item in list)
             {
-                PropertyInfo[] allProps = item.GetType().GetProperties().Where(x => x.CanRead).ToArray();
-                foreach (var itm in allProps)
-                {
-                    forCb.Add(itm.Name);
-                }
+                forCb.Add(item.GetType().GetProperties().Select(f => f.Name).First());
             }
 
             comboBox1.DataSource = forCb;
@@ -44,7 +41,7 @@ namespace SortbyProp
             {
                 foreach (var item in list)
                 {
-                    foreach (var itm in item.GetType().GetProperties().Where(x => x.CanRead).ToArray())
+                    foreach (var itm in item.GetType().GetProperties().ToArray())
                     {
                         if (itm.Name == comboBox1.SelectedItem.ToString())
                             new SortingUI(comboBox1.SelectedItem.ToString(), item).Show();
