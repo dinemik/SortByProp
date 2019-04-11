@@ -16,7 +16,7 @@ namespace SortbyProp
     public partial class SortingUI : Form
     {
         private object ObjDb;
-        private IList ObjLst;
+        private IEnumerable ObjLst;
 
         public SortingUI(string fild, object obj)
         {
@@ -29,7 +29,7 @@ namespace SortbyProp
 
             foreach (var item in quer)
             {
-                ObjLst = (IList)item.Proporty.GetValue(obj);
+                ObjLst = (IEnumerable)item.Proporty.GetValue(obj);
             }
             dgv.DataSource = ObjLst;
 
@@ -59,22 +59,21 @@ namespace SortbyProp
         {
             if(!string.IsNullOrEmpty(SortingProp.SelectedItem.ToString()))
             {
-                var t = ObjDb.GetType().GetMethod(SortingProp.SelectedItem.ToString());
-                List<object> newList = new List<object>();
-
-                object inwoked;
-
-                if (SortBy.Checked)
-                    inwoked = t.Invoke(ObjDb, new object[] { true });
-                else
-                    inwoked = t.Invoke(ObjDb, new object[] { false });
-
-                foreach (var item in (IEnumerable<object>)inwoked)
+                List<object> LstOfSortedItems = new List<object>();
+                foreach (var item in ObjLst)
                 {
-                    newList.Add(item);
+                    var Obj = item.GetType().GetProperties()
+                    .Select(x => new { Proporty = x, Attribute = x.GetCustomAttributes(false) }).ToList();
+
+                    LstOfSortedItems.Add(item);
                 }
 
-                dgv.DataSource = ObjLst = newList;
+                if (SortBy.Checked)
+                    LstOfSortedItems.OrderBy(o => o.GetType().GetProperty(SortingProp.SelectedItem.ToString()));
+                else
+                    LstOfSortedItems.OrderByDescending(o => o.GetType().GetProperty(SortingProp.SelectedItem.ToString()));
+
+                dgv.DataSource = LstOfSortedItems;
             }
         }
     }

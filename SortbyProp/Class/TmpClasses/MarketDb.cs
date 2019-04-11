@@ -17,7 +17,5 @@ namespace SortbyProp.Class.TmpClasses
             new Market{ ID = 4, MarkName = "asdadad" },
             new Market{ ID = 6, MarkName = "asdadad" }
         };
-
-        public IEnumerable<Market> ID(bool filt) => filt ? Markets.OrderBy(o => o.ID) : Markets.OrderByDescending(o => o.ID);
     }
 }

@@ -17,9 +17,5 @@ namespace SortbyProp.Class.TmpClasses
             new Coffe{ CoffeID = 5, CoffeName = "name", CoffePrice = 62.1 },
             new Coffe{ CoffeID = 1, CoffeName = "name", CoffePrice = 19.1 }
         };
-
-        public IEnumerable<Coffe> CoffeID(bool filt) => filt ? Coffes.OrderBy(o => o.CoffeID) : Coffes.OrderByDescending(o => o.CoffeID);
-
-        public IEnumerable<Coffe> CoffePrice(bool filt) => filt ? Coffes.OrderBy(o => o.CoffePrice) : Coffes.OrderByDescending(o => o.CoffePrice);
     }
 }
