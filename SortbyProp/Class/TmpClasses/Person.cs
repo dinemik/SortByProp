@@ -11,9 +11,10 @@ namespace SortbyProp.Class.TmpClasses
         [FiltringBy("ID")]
         public int ID { get; set; }
 
+        [FiltringBy]
         public string Name { get; set; }
 
-        [FiltringBy("LName")]
+        [FiltringBy("Last Name")]
         public string LName { get; set; }
     }
 }

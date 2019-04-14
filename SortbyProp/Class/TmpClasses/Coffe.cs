@@ -8,10 +8,13 @@ namespace SortbyProp.Class.TmpClasses
 {
     public class Coffe
     {
-        [FiltringBy("CoffeID")]
+        [FiltringBy("Coffe ID")]
         public int CoffeID { get; set; }
+
+        [FiltringBy]
         public string CoffeName { get; set; }
-        [FiltringBy("CoffePrice")]
+
+        [FiltringBy("Coffe Price")]
         public double CoffePrice { get; set; }
     }
 }

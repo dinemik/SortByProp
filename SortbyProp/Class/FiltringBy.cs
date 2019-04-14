@@ -10,7 +10,7 @@ namespace SortbyProp.Class
     {
         public string GetPropName { get; set; }
 
-        public FiltringBy(string pName)
+        public FiltringBy(string pName = null)
         {
             GetPropName = pName;
         }

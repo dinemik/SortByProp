@@ -24,20 +24,32 @@ namespace SortbyProp
             IEnumerable tmp = (IEnumerable)obj.GetType().GetProperty(fild).GetValue(obj);
             dgv.DataSource = ObjLst = tmp.Cast<object>().ToList();
 
-            SortingProp.DataSource = ObjLst.First().GetType().GetProperties()
-                .Where(o => o.GetCustomAttribute<FiltringBy>() != null)
-                .Select(o => o.GetCustomAttribute<FiltringBy>().GetPropName)
-                .ToList();
+            var AtributeHasPropName = ObjLst.First().GetType().GetProperties()
+                .Select(o => o.GetCustomAttribute<FiltringBy>()?.GetPropName)
+                .Where(o => o != null).ToList();
+
+            var AtributeHasNotPropName = ObjLst.First().GetType().GetProperties()
+                .Where(o => o.GetCustomAttribute<FiltringBy>() != null 
+                        && o.GetCustomAttribute<FiltringBy>().GetPropName == null)
+                .Select(o => o.Name).ToList();
+
+            AtributeHasPropName.AddRange(AtributeHasNotPropName);
+
+            SortingProp.DataSource = AtributeHasPropName;
         }
 
         private void SortingProp_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(SortingProp.SelectedItem.ToString()))
+            if (!string.IsNullOrEmpty(SortingProp.SelectedItem.ToString()))
             {
+                var PropName = ObjLst.Select(o => o).First().GetType().GetProperties()
+                    .FirstOrDefault(o => o.GetCustomAttribute<FiltringBy>()?.GetPropName == SortingProp.SelectedItem.ToString()
+                    || o.Name == SortingProp.SelectedItem.ToString()).Name;
+
                 if (!SortBy.Checked)
-                    dgv.DataSource = ObjLst = ObjLst.OrderBy(o => o.GetType().GetProperty(SortingProp.SelectedItem.ToString()).GetValue(o)).ToList();
+                    dgv.DataSource = ObjLst = ObjLst.OrderBy(o => o.GetType().GetProperty(PropName).GetValue(o)).ToList();
                 else
-                    dgv.DataSource = ObjLst = ObjLst.OrderByDescending(o => o.GetType().GetProperty(SortingProp.SelectedItem.ToString()).GetValue(o)).ToList();
+                    dgv.DataSource = ObjLst = ObjLst.OrderByDescending(o => o.GetType().GetProperty(PropName).GetValue(o)).ToList();
             }
         }
     }
